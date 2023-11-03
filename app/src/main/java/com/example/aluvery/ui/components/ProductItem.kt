@@ -40,13 +40,16 @@ import com.example.aluvery.ui.theme.Teal200
 import java.math.BigDecimal
 
 @Composable
-fun ProductItem(product: Product) {
+fun ProductItem(
+    product: Product,
+    modifier: Modifier = Modifier
+) {
     Surface(
         shape = RoundedCornerShape(15.dp),
         shadowElevation = 4.dp,
     ) {
         Column(
-            Modifier
+            modifier
                 .heightIn(250.dp, 300.dp)
                 .width(200.dp)
         ) {

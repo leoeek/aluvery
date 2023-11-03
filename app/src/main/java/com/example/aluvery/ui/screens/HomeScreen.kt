@@ -35,10 +35,16 @@ import com.example.aluvery.ui.theme.AluveryTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    sections: Map<String, List<Product>>
+    sections: Map<String, List<Product>>,
+    searchText: String = ""
 ) {
     Column {
-        var text by remember { mutableStateOf("") }
+        var text by remember { mutableStateOf(searchText) }
+        val searchedProducts = remember(key1 = text) {
+            sampleProducts.filter { product ->
+                product.name.contains(text, true) || product.description?.contains(text) ?: false
+            }
+        }
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
@@ -62,22 +68,24 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-//            for (section in sections) {
-//                val title = section.key
-//                val products = section.value
-//                item {
-//                    ProductsSection(
-//                        title = title,
-//                        products = products
-//                    )
-//                }
-//            }
-            
-            items(sampleProducts) { product ->
-                CardProductItem(
-                    product = product,
-                    Modifier.padding(horizontal = 16.dp)
-                )
+            if (text.isBlank()) {
+                for (section in sections) {
+                    val title = section.key
+                    val products = section.value
+                    item {
+                        ProductsSection(
+                            title = title,
+                            products = products
+                        )
+                    }
+                }
+            } else {
+                items(searchedProducts) { product ->
+                    CardProductItem(
+                        product = product,
+                        Modifier.padding(horizontal = 16.dp)
+                    )
+                }
             }
         }
     }
